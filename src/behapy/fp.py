@@ -12,6 +12,7 @@ import statsmodels.api as sm
 from intervaltree import IntervalTree, Interval
 from numpy.lib.stride_tricks import sliding_window_view
 import bottleneck as bn
+import pyarrow
 from .pathutils import get_raw_fibre_path, list_raw, \
     get_rejected_intervals_path, get_preprocessed_fibre_path
 
@@ -372,6 +373,17 @@ def normalise(signal, control, mask, fs, method='fit', detrend=True):
 
 
 def preprocess(root, subject, session, task, run, label):
+    '''
+    Preprocess function.
+
+    :param root:
+    :param subject:
+    :param session:
+    :param task:
+    :param run:
+    :param label:
+
+    '''
     intervals = load_rejections(root, subject, session, task, run, label)
     # Check if the recording has rejections saved
     if intervals is None:
@@ -383,6 +395,7 @@ def preprocess(root, subject, session, task, run, label):
     logging.info(f'Preprocessing subject {subject}, '
                  f'session {session}, task {task}, '
                  f'run {run}, label {label}...')
+                 
     recording = load_signal(root, subject, session, task, run, label, 'iso')
     recording = downsample(recording, 64)
     rej = reject(recording, intervals, fill=True)
@@ -401,7 +414,15 @@ def preprocess(root, subject, session, task, run, label):
     meta_fn = get_preprocessed_fibre_path(
         root, subject, session, task, run, label, 'json')
     data_fn.parent.mkdir(parents=True, exist_ok=True)
-    dff.to_parquet(data_fn)
+    print(data_fn)
+    try: 
+      dff.to_parquet(data_fn, engine = 'pyarrow')
+    except TypeError as e:
+      print(f"Serialisation error with pyarrow: {e}\n Proceeding with fastparquet...")
+    try:
+      dff.to_parquet(data_fn, engine = 'fastparquet')
+    except TypeError as e:
+      print("Error with fastparquet: ", e)
     meta = dff.attrs
     meta['root'] = str(root)
     with open(meta_fn, 'w') as file:

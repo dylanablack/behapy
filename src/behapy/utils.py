@@ -6,6 +6,13 @@ from collections import namedtuple
 
 
 def load_preprocessed_experiment(root):
+    '''
+    A function to load BIDS data via input of the BIDSROOT.
+
+    :param root: the root directory following bids conversion from source data.
+    :returns: the Preprocessed(recordings, dff, events) object.
+
+    '''
     Preprocessed = namedtuple('Preprocessed', ['recordings', 'dff', 'events'])
     recordings = pd.DataFrame(list_preprocessed(root))
     if recordings.empty:

@@ -107,6 +107,7 @@ def medpc2csv_command():
 
 def preprocess_dash(bidsroot):
     bidsroot = Path(bidsroot)
+    #bidsroot = str(bidsroot) # My change 
     recordings = pd.DataFrame(list_raw(bidsroot))
     signals = recordings.loc[:, ['subject', 'session', 'task', 'run', 'label']].drop_duplicates()
 
@@ -132,24 +133,21 @@ def preprocess_dash_command():
 
 
 def preprocess(bidsroot):
-    bidsroot = Path(bidsroot)
-    recordings = pd.DataFrame(list_raw(bidsroot))
-    signals = recordings.loc[:, ['subject', 'session', 'task', 'run', 'label']].drop_duplicates()
-
-    def save_recording(row):
-        return fp.preprocess(bidsroot, row.subject, row.session, row.task,
-                             row.run, row.label)
-
-    signals.apply(save_recording, axis=1)
-
+  bidsroot = Path(bidsroot)
+  print(bidsroot)
+  print(bidsroot)
+  recordings = pd.DataFrame(list_raw(bidsroot))
+  print(recordings)
+  signals = recordings.loc[:, ['subject', 'session', 'task', 'run', 'label']].drop_duplicates()
+  print(signals.subject)
+  def save_recording(row): # PROBLEM ON MAC STARTS SOMEWHERE HERE.
+    return fp.preprocess(bidsroot, row.subject, row.session, row.task,row.run, row.label)
+  signals.apply(save_recording, axis=1)
 
 def preprocess_command():
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
-    parser = argparse.ArgumentParser(
-        description=('Preprocess the dataset from raw data using the rejected '
-                     'intervals')
-    )
-    parser.add_argument('bidsroot', type=str,
-                        help='path to the BIDS root')
-    args = parser.parse_args()
-    preprocess(**vars(args))
+  logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+  parser = argparse.ArgumentParser(description=('Preprocess the dataset from raw data using the rejected ''intervals'))
+  parser.add_argument('bidsroot', type=str,
+        help='path to the BIDS root')
+  args = parser.parse_args()
+  preprocess(**vars(args))
