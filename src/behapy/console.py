@@ -117,7 +117,7 @@ def preprocess_dash(bidsroot):
                                 r.label, 'iso')
         return signal
 
-    dash = PreprocessDashboard(signals, get_recording)
+    dash = PreprocessDashboard(signals, get_recording, bidsroot)
     pn.serve(dash.view(), port=8080)
 
 
