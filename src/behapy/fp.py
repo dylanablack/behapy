@@ -416,13 +416,13 @@ def preprocess(root, subject, session, task, run, label):
     data_fn.parent.mkdir(parents=True, exist_ok=True)
     print(data_fn)
     try: 
-      dff.to_parquet(data_fn, engine = 'pyarrow')
+      dff.to_parquet(data_fn, engine='pyarrow')
     except TypeError as e:
       print(f"Serialisation error with pyarrow: {e}\n Proceeding with fastparquet...")
-    try:
-      dff.to_parquet(data_fn, engine = 'fastparquet')
-    except TypeError as e:
-      print("Error with fastparquet: ", e)
+      try:
+        dff.to_parquet(data_fn, engine='fastparquet')
+      except TypeError as e:
+        print("Error with fastparquet: ", e)
     meta = dff.attrs
     meta['root'] = str(root)
     with open(meta_fn, 'w') as file:
