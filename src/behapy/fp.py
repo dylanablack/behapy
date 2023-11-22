@@ -428,6 +428,7 @@ def preprocess(root, subject, session, task, run, label):
     :param label:
 
     '''
+    config = load_preprocess_config(root)
     intervals = load_rejections(root, subject, session, task, run, label)
     # Check if the recording has rejections saved
     if intervals is None:
