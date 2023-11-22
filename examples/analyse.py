@@ -11,7 +11,9 @@ sns.set_theme()
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
-# %%
+# %% 
+# This loads in a pre-processed dataframe, calling the load_... function. 
+
 BIDSROOT = Path('..')
 pre = load_preprocessed_experiment(BIDSROOT)
 dff_id = ['subject', 'session', 'task', 'run', 'label']

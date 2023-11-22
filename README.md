@@ -14,3 +14,28 @@ pip install -e .
 ## Examples
 
 There is a MedPC event reading example in the examples subfolder. This example by default assumes MedPC data files are in the same folder as the notebook file.
+
+## Processing steps
+
+### Converting source data to bids
+
+```{bash}
+tdt2bids session_fn experiment_fn source_dat
+```
+
+### Visualise the data for QC. 
+
+```{bash}
+ppd .
+```
+
+### Preprocess the data.
+
+Process the data using the preprocess executable from within BIDSROOT. 
+
+```{bash}
+preprocess . 
+```
+
+
+
